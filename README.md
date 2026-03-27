@@ -89,3 +89,5 @@ create file serve.py under src/dur...
 uv run python src/duration_pred_serve/serve.py
 
 uv run python src/duration_pred_serve/serve.py
+
+uv run python predict_test.py

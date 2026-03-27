@@ -2,10 +2,23 @@ import pickle
 from typing import Any
 from fastapi import FastAPI
 from pydantic import BaseModel
+import os
+from loguru import logger
+
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    MODEL_PATH: str ="./model.bin"
+    MODEL_VERSION: str = "not defined"
+
+settings = Settings()
 
 
-with open("./models/2022-01.bin" , "rb") as f_in:
+# with open("./models/2022-01.bin" , "rb") as f_in:
+with open(settings.MODEL_PATH , "rb") as f_in:
     model = pickle.load(f_in)
+
+logger.info(f"version is {settings.MODEL_VERSION}")
 
 trip = {
     "PULocationID" : "43",
@@ -41,6 +54,10 @@ class PredictRequest(BaseModel):
 
 app = FastAPI()
 
+
+@app.get("/")
+def usenaother():
+    return "Please use /predict"
 
 @app.post("/predict")
 def predict_endpoint( predict_request: PredictRequest) -> dict[str, Any]:
